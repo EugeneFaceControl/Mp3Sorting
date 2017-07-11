@@ -6,27 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    List<Song> songArrayList;
+    private List<Song> songArrayList;
 
     public static void main(String[] args) {
-
+        Main main = new Main();
+        String path = "D:/Music";
+        main.makingArrayOfSongs(path);
     }
 
-    public void makingArrayOfSongs(String path) {
+    private void makingArrayOfSongs(String path) {
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
         songArrayList = new ArrayList<>();
+        assert listOfFiles != null;
         for (File directoryItem : listOfFiles) {
             if (directoryItem.isFile()) {
-
+                setArrayListOfSongs(directoryItem);
             }
             if (directoryItem.isDirectory()) {
-
+                getDirectory(directoryItem);
             }
         }
     }
 
-    public void getFile(File directoryItem) {
+    private void setArrayListOfSongs(File directoryItem) {
         String nameOfFileString = directoryItem.getName();
         String[] nameOfFileSplit = nameOfFileString.split("[.]");
         Song song = new Song();
@@ -59,24 +62,29 @@ public class Main {
                     song.setArtist(artist);
                 }
                 song.setPath(path);
+                addToSongArrayList(song);
+                System.out.println(song);
 
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void getDirectory(File directory){
+    private void getDirectory(File directory){
         File[] listOfFiles = directory.listFiles();
+        assert listOfFiles != null;
         for (File directoryItem : listOfFiles){
-
+            if (directoryItem.isDirectory()){
+                getDirectory(directoryItem);
+            }
+            if (directoryItem.isFile()) {
+                setArrayListOfSongs(directoryItem);
+            }
         }
     }
 
-    public void addToSongArrayList(Song song) {
+    private void addToSongArrayList(Song song) {
         songArrayList.add(song);
     }
 }
